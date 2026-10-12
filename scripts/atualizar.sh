@@ -10,6 +10,7 @@ MARCA="$BASE/.ultima-versao"
 
 cd "$REPO"
 sudo -u minecraft git fetch -q origin
+RAMO=$(cat "$BASE/ramo" 2>/dev/null || true)
 RAMO=${RAMO:-$(sudo -u minecraft git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')}
 sudo -u minecraft git reset -q --hard "origin/$RAMO"
 

@@ -24,6 +24,8 @@ if [ ! -d "$BASE/repo/.git" ]; then
   git clone ${RAMO:+-b "$RAMO"} "$REPO_URL" "$BASE/repo"
 fi
 mkdir -p "$BASE/server"
+# Ramo do GitHub que o servidor segue (padrao: o ramo principal do repositorio).
+if [ -n "${RAMO:-}" ]; then echo "$RAMO" > "$BASE/ramo"; fi
 chown -R minecraft:minecraft "$BASE"
 
 echo "==> Criando os servicos"
