@@ -28,6 +28,8 @@ mkdir -p "$BASE/server"
 if [ -n "${RAMO:-}" ]; then echo "$RAMO" > "$BASE/ramo"; fi
 chown -R minecraft:minecraft "$BASE"
 
+JAVA="/usr/lib/jvm/java-21-openjdk-$(dpkg --print-architecture)/bin/java"
+
 echo "==> Criando os servicos"
 cat > /etc/systemd/system/minecraft.service <<UNIT
 [Unit]
@@ -39,7 +41,7 @@ Wants=network-online.target
 User=minecraft
 WorkingDirectory=$BASE/server
 EnvironmentFile=$BASE/repo/config.env
-ExecStart=/usr/bin/java -Xms\${MEMORIA} -Xmx\${MEMORIA} -jar fabric-server-launch.jar nogui
+ExecStart=$JAVA -Xms\${MEMORIA} -Xmx\${MEMORIA} -jar fabric-server-launch.jar nogui
 Restart=on-failure
 RestartSec=10
 TimeoutStopSec=120
