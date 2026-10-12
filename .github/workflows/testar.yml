@@ -73,7 +73,7 @@ jobs:
           gh release delete modpack --yes --cleanup-tag || true
           gh release create modpack modpack.mrpack --latest \
             --title "Modpack do servidor" \
-            --notes "Importe este arquivo no Modrinth App (ou Prism Launcher) para jogar no servidor com os mesmos mods."
+            --notes-file modpack-aternos.md
 
   # Roda o instalador de verdade numa maquina Ubuntu limpa, como na Oracle.
   instalador:

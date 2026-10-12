@@ -4,7 +4,7 @@
 Uso:
   mods.py verificar                 # so confere se todos os mods existem para a versao
   mods.py servidor <pasta>          # baixa o Fabric e os mods de servidor para <pasta>
-  mods.py modpack <arquivo.mrpack>  # gera o modpack para os jogadores importarem
+  mods.py modpack <arquivo.mrpack>  # gera o modpack dos jogadores e a lista para o Aternos (.md)
 
 So usa a biblioteca padrao do Python.
 """
@@ -210,6 +210,31 @@ def cmd_modpack(config, destino):
     with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("modrinth.index.json", json.dumps(indice, indent=2))
     print(f"Modpack gerado: {destino}")
+
+    # Lista do que instalar no servidor do Aternos (aba Mods), com as dependencias.
+    linhas = [
+        f"## Mods para instalar no Aternos (Fabric {versao_mc})",
+        "",
+        "No Aternos, abra **Mods**, pesquise cada nome abaixo e clique em **Install**.",
+        "",
+    ]
+    for mod in mods:
+        if no_servidor(mod):
+            linhas.append(f"- [ ] **{mod['nome']}** (versão {mod['versao']}): https://modrinth.com/mod/{mod['slug']}")
+    so_jogo = [m for m in mods if not no_servidor(m)]
+    if so_jogo:
+        linhas += ["", "Estes ficam só no jogo, não instale no Aternos:", ""]
+        linhas += [f"- {m['nome']}" for m in so_jogo]
+    linhas += [
+        "",
+        "## Jogadores",
+        "",
+        "Baixe `modpack.mrpack` abaixo e importe no Modrinth App (**+ → Import from file**).",
+    ]
+    lista = os.path.splitext(destino)[0] + "-aternos.md"
+    with open(lista, "w", encoding="utf-8") as f:
+        f.write("\n".join(linhas) + "\n")
+    print(f"Lista para o Aternos: {lista}")
     return 0
 
 
