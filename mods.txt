@@ -1,0 +1,8 @@
+# Lista de mods do servidor. Um mod por linha.
+# Pode colar o link do Modrinth (https://modrinth.com/mod/sodium) ou so o nome do final do link (sodium).
+# Linhas com # sao ignoradas. Dependencias obrigatorias sao instaladas sozinhas.
+# Mods que so funcionam no jogo (ex.: sodium) vao so para o modpack dos jogadores.
+
+fabric-api
+lithium
+ferrite-core
