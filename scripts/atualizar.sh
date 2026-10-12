@@ -10,7 +10,7 @@ MARCA="$BASE/.ultima-versao"
 
 cd "$REPO"
 sudo -u minecraft git fetch -q origin
-RAMO=$(sudo -u minecraft git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')
+RAMO=${RAMO:-$(sudo -u minecraft git symbolic-ref --short refs/remotes/origin/HEAD | sed 's#^origin/##')}
 sudo -u minecraft git reset -q --hard "origin/$RAMO"
 
 ATUAL=$(cat mods.txt config.env server.properties reiniciar.txt scripts/mods.py | sha256sum | cut -d' ' -f1)

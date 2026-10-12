@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
@@ -60,7 +60,7 @@ jobs:
       - name: Gerar modpack
         run: VERSAO_MODPACK="${GITHUB_SHA::7}" python3 scripts/mods.py modpack modpack.mrpack
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: modpack
           path: modpack.mrpack
@@ -74,3 +74,23 @@ jobs:
           gh release create modpack modpack.mrpack --latest \
             --title "Modpack do servidor" \
             --notes "Importe este arquivo no Modrinth App (ou Prism Launcher) para jogar no servidor com os mesmos mods."
+
+  # Roda o instalador de verdade numa maquina Ubuntu limpa, como na Oracle.
+  instalador:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Rodar instalar.sh
+        run: |
+          sudo RAMO="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" \
+            REPO_URL="https://github.com/${GITHUB_REPOSITORY}.git" \
+            bash scripts/instalar.sh
+      - name: Esperar o servidor ficar pronto e responder
+        run: |
+          for i in $(seq 1 60); do
+            sudo journalctl -u minecraft --no-pager | grep -q "Done (" && break
+            sleep 5
+          done
+          sudo journalctl -u minecraft --no-pager | tail -20
+          python3 scripts/ping.py localhost 25565

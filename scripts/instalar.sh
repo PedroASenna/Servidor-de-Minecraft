@@ -21,7 +21,7 @@ echo "==> Criando usuario minecraft e baixando o repositorio"
 id minecraft >/dev/null 2>&1 || useradd --system --home "$BASE" --shell /usr/sbin/nologin minecraft
 mkdir -p "$BASE"
 if [ ! -d "$BASE/repo/.git" ]; then
-  git clone "$REPO_URL" "$BASE/repo"
+  git clone ${RAMO:+-b "$RAMO"} "$REPO_URL" "$BASE/repo"
 fi
 mkdir -p "$BASE/server"
 chown -R minecraft:minecraft "$BASE"
